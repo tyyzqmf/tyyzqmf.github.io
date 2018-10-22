@@ -109,17 +109,17 @@
 
 
 
-  <meta name="description" content="ClickHouse安装ClickHouse安装ClickHouse安装">
+  <meta name="description" content="安装源因为官方只提供ubuntu和Docker的安装方式，所以在Centos下安装需要找第三方源 官方推荐：https://github.com/Altinity/clickhouse-rpm-install 环境准备测试环境4台服务器1234192.168.1.1    node1192.168.1.2    node2192.168.1.3    node3192.168.1.4    nod">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ClickHouse安装">
 <meta property="og:url" content="http://yoursite.com/2018/10/15/ClickHouse安装/index.html">
 <meta property="og:site_name" content="5211小站">
-<meta property="og:description" content="ClickHouse安装ClickHouse安装ClickHouse安装">
+<meta property="og:description" content="安装源因为官方只提供ubuntu和Docker的安装方式，所以在Centos下安装需要找第三方源 官方推荐：https://github.com/Altinity/clickhouse-rpm-install 环境准备测试环境4台服务器1234192.168.1.1    node1192.168.1.2    node2192.168.1.3    node3192.168.1.4    nod">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-10-15T15:09:35.162Z">
+<meta property="og:updated_time" content="2018-10-22T10:43:04.537Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ClickHouse安装">
-<meta name="twitter:description" content="ClickHouse安装ClickHouse安装ClickHouse安装">
+<meta name="twitter:description" content="安装源因为官方只提供ubuntu和Docker的安装方式，所以在Centos下安装需要找第三方源 官方推荐：https://github.com/Altinity/clickhouse-rpm-install 环境准备测试环境4台服务器1234192.168.1.1    node1192.168.1.2    node2192.168.1.3    node3192.168.1.4    nod">
 
 
 
@@ -339,12 +339,24 @@
                 
               
 
-              <time title="创建时间：2018-10-15 12:59:34 / 修改时间：15:09:35" itemprop="dateCreated datePublished" datetime="2018-10-15T12:59:34+00:00">2018-10-15</time>
+              <time title="创建时间：2018-10-15 12:59:34" itemprop="dateCreated datePublished" datetime="2018-10-15T12:59:34+00:00">2018-10-15</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-10-22 10:43:04" itemprop="dateModified" datetime="2018-10-22T10:43:04+00:00">2018-10-22</time>
               
             
           </span>
@@ -395,7 +407,22 @@
       
 
       
-        <p>ClickHouse安装<br>ClickHouse安装<br>ClickHouse安装</p>
+        <h2 id="安装源"><a href="#安装源" class="headerlink" title="安装源"></a>安装源</h2><p>因为官方只提供ubuntu和Docker的安装方式，所以在Centos下安装需要找第三方源</p>
+<p>官方推荐：<a href="https://github.com/Altinity/clickhouse-rpm-install" target="_blank" rel="noopener">https://github.com/Altinity/clickhouse-rpm-install</a></p>
+<h2 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h2><h3 id="测试环境4台服务器"><a href="#测试环境4台服务器" class="headerlink" title="测试环境4台服务器"></a>测试环境4台服务器</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">192.168.1.1    node1</span><br><span class="line">192.168.1.2    node2</span><br><span class="line">192.168.1.3    node3</span><br><span class="line">192.168.1.4    node4</span><br></pre></td></tr></table></figure>
+<h3 id="测试环境Zookeeper集群"><a href="#测试环境Zookeeper集群" class="headerlink" title="测试环境Zookeeper集群"></a>测试环境Zookeeper集群</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">zk1:2181</span><br><span class="line">zk2:2181</span><br><span class="line">zk3:2181</span><br></pre></td></tr></table></figure>
+<h2 id="安装clickhouse"><a href="#安装clickhouse" class="headerlink" title="安装clickhouse"></a>安装clickhouse</h2><h3 id="安装依赖"><a href="#安装依赖" class="headerlink" title="安装依赖"></a>安装依赖</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install -y pygpgme yum-utils libicu</span><br></pre></td></tr></table></figure>
+<h3 id="增加yum-repo"><a href="#增加yum-repo" class="headerlink" title="增加yum.repo"></a>增加yum.repo</h3><p>新建文件/etc/yum.repos.d/altinity_clickhouse.repo</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">[altinity_clickhouse]</span><br><span class="line">name=altinity_clickhouse</span><br><span class="line">baseurl=https://packagecloud.io/altinity/clickhouse/el/6/$basearch</span><br><span class="line">repo_gpgcheck=1</span><br><span class="line">gpgcheck=0</span><br><span class="line">enabled=1</span><br><span class="line">gpgkey=https://packagecloud.io/altinity/clickhouse/gpgkey</span><br><span class="line">sslverify=1</span><br><span class="line">sslcacert=/etc/pki/tls/certs/ca-bundle.crt</span><br><span class="line">metadata_expire=300</span><br><span class="line"></span><br><span class="line">[altinity_clickhouse-source]</span><br><span class="line">name=altinity_clickhouse-source</span><br><span class="line">baseurl=https://packagecloud.io/altinity/clickhouse/el/6/SRPMS</span><br><span class="line">repo_gpgcheck=1</span><br><span class="line">gpgcheck=0</span><br><span class="line">enabled=1</span><br><span class="line">gpgkey=https://packagecloud.io/altinity/clickhouse/gpgkey</span><br><span class="line">sslverify=1</span><br><span class="line">sslcacert=/etc/pki/tls/certs/ca-bundle.crt</span><br><span class="line">metadata_expire=300</span><br></pre></td></tr></table></figure>
+<h3 id="刷新yum缓存、安装"><a href="#刷新yum缓存、安装" class="headerlink" title="刷新yum缓存、安装"></a>刷新yum缓存、安装</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo yum -q makecache -y --disablerepo=&apos;*&apos; --enablerepo=&apos;altinity_clickhouse&apos;</span><br><span class="line">sudo yum install -y clickhouse-server clickhouse-client</span><br></pre></td></tr></table></figure>
+<h3 id="修改配置文件"><a href="#修改配置文件" class="headerlink" title="修改配置文件"></a>修改配置文件</h3><p>clickhouse默认的数据文件和配置文件都在/var，由于服务器的系统盘和数据盘都是单独挂载，显然这样的配置不合理。为了方便管理，我们把日志、配置文件都存储到一个统一的根路径。</p>
+<p>修改/etc/rc.d/init.d/clickhouse-server文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">CLICKHOUSE_LOGDIR=/data/clickhouse/log</span><br><span class="line">CLICKHOUSE_DATADIR_OLD=/data/clickhouse/data_old</span><br><span class="line">CLICKHOUSE_CONFIG=/data/clickhouse/config.xml</span><br></pre></td></tr></table></figure>
+<p><strong>修改最核心配置文件config.xml</strong>，复制到其他节点，注意主机名不同！</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot;?&gt;</span><br><span class="line">&lt;yandex&gt;</span><br><span class="line">    &lt;logger&gt;</span><br><span class="line">        &lt;level&gt;trace&lt;/level&gt;</span><br><span class="line">        &lt;log&gt;/data/clickhouse/log/clickhouse-server/clickhouse-server.log&lt;/log&gt;</span><br><span class="line">        &lt;errorlog&gt;/data/clickhouse/log/clickhouse-server/clickhouse-server.err.log&lt;/errorlog&gt;</span><br><span class="line">        &lt;size&gt;1000M&lt;/size&gt;</span><br><span class="line">        &lt;count&gt;10&lt;/count&gt;</span><br><span class="line">        &lt;!-- &lt;console&gt;1&lt;/console&gt; --&gt; &lt;!-- Default behavior is autodetection (log to console if not daemon mode and is tty) --&gt;</span><br><span class="line">    &lt;/logger&gt;</span><br><span class="line">    &lt;http_port&gt;8123&lt;/http_port&gt;</span><br><span class="line">    &lt;tcp_port&gt;9000&lt;/tcp_port&gt;</span><br><span class="line">    &lt;interserver_http_port&gt;9009&lt;/interserver_http_port&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!-- 主机名--&gt;</span><br><span class="line">    &lt;interserver_http_host&gt;node1&lt;/interserver_http_host&gt;</span><br><span class="line">    </span><br><span class="line">    &lt;!-- 监听(集群配置必须)--&gt;</span><br><span class="line">    &lt;listen_host&gt;0.0.0.0&lt;/listen_host&gt;</span><br><span class="line">    </span><br><span class="line">    &lt;!-- 数据目录 --&gt;</span><br><span class="line">    &lt;path&gt;/data/clickhouse/&lt;/path&gt;</span><br><span class="line"></span><br><span class="line">    &lt;tmp_path&gt;/data/clickhouse/tmp/&lt;/tmp_path&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!-- 用户相关配置，暂时默认 --&gt;</span><br><span class="line">    &lt;user_files_path&gt;/data/clickhouse/user_files/&lt;/user_files_path&gt;</span><br><span class="line">    &lt;users_config&gt;users.xml&lt;/users_config&gt;</span><br><span class="line">    &lt;default_profile&gt;default&lt;/default_profile&gt;</span><br><span class="line">    &lt;default_database&gt;default&lt;/default_database&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!-- 集群配置 --&gt;</span><br><span class="line">    &lt;remote_servers incl=&quot;clickhouse_remote_servers&quot; &gt;</span><br><span class="line">        &lt;test&gt;</span><br><span class="line">        	  &lt;!-- 数据分片1  --&gt;</span><br><span class="line">            &lt;shard&gt;</span><br><span class="line">                &lt;internal_replication&gt;false&lt;/internal_replication&gt;</span><br><span class="line">                &lt;replica&gt;</span><br><span class="line">                    &lt;host&gt;192.168.1.1&lt;/host&gt;</span><br><span class="line">                    &lt;port&gt;9000&lt;/port&gt;</span><br><span class="line">                &lt;/replica&gt;</span><br><span class="line">            &lt;/shard&gt;</span><br><span class="line">        	  &lt;!-- 数据分片2  --&gt;</span><br><span class="line">            &lt;shard&gt;</span><br><span class="line">                &lt;internal_replication&gt;false&lt;/internal_replication&gt;</span><br><span class="line">                &lt;replica&gt;</span><br><span class="line">                    &lt;host&gt;192.168.1.2&lt;/host&gt;</span><br><span class="line">                    &lt;port&gt;9000&lt;/port&gt;</span><br><span class="line">                &lt;/replica&gt;</span><br><span class="line">            &lt;/shard&gt;</span><br><span class="line">        	  &lt;!-- 数据分片3  --&gt;</span><br><span class="line">            &lt;shard&gt;</span><br><span class="line">                &lt;internal_replication&gt;false&lt;/internal_replication&gt;</span><br><span class="line">                &lt;replica&gt;</span><br><span class="line">                    &lt;host&gt;192.168.1.3&lt;/host&gt;</span><br><span class="line">                    &lt;port&gt;9000&lt;/port&gt;</span><br><span class="line">                &lt;/replica&gt;</span><br><span class="line">            &lt;/shard&gt;</span><br><span class="line">        	  &lt;!-- 数据分片4  --&gt;</span><br><span class="line">            &lt;shard&gt;</span><br><span class="line">                &lt;internal_replication&gt;false&lt;/internal_replication&gt;</span><br><span class="line">                &lt;replica&gt;</span><br><span class="line">                    &lt;host&gt;192.168.1.4&lt;/host&gt;</span><br><span class="line">                    &lt;port&gt;9000&lt;/port&gt;</span><br><span class="line">                &lt;/replica&gt;</span><br><span class="line">            &lt;/shard&gt;</span><br><span class="line">        &lt;/test&gt;</span><br><span class="line">    &lt;/remote_servers&gt;</span><br><span class="line">    </span><br><span class="line">    &lt;!-- ZK集群  --&gt;</span><br><span class="line">    &lt;zookeeper incl=&quot;zookeeper-servers&quot; optional=&quot;true&quot;&gt;</span><br><span class="line">        &lt;node index=&quot;1&quot;&gt;</span><br><span class="line">            &lt;host&gt;zk1&lt;/host&gt;</span><br><span class="line">            &lt;port&gt;2181&lt;/port&gt;</span><br><span class="line">        &lt;/node&gt;</span><br><span class="line">        &lt;node index=&quot;2&quot;&gt;</span><br><span class="line">            &lt;host&gt;zk2&lt;/host&gt;</span><br><span class="line">            &lt;port&gt;2181&lt;/port&gt;</span><br><span class="line">        &lt;/node&gt;</span><br><span class="line">        &lt;node index=&quot;3&quot;&gt;</span><br><span class="line">            &lt;host&gt;zk3&lt;/host&gt;</span><br><span class="line">            &lt;port&gt;2181&lt;/port&gt;</span><br><span class="line">        &lt;/node&gt;</span><br><span class="line">    &lt;/zookeeper&gt;</span><br><span class="line">&lt;/yandex&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="创建相关目录"><a href="#创建相关目录" class="headerlink" title="创建相关目录"></a>创建相关目录</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /data/clickhouse/log</span><br><span class="line">mkdir -p /data/clickhouse/data</span><br><span class="line">chown -R clickhouse:clickhouse /data/clickhouse</span><br></pre></td></tr></table></figure>
+<h2 id="启动服务"><a href="#启动服务" class="headerlink" title="启动服务"></a>启动服务</h2><h3 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service clickhouse-server start</span><br></pre></td></tr></table></figure>
+<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">$ clickhouse-client</span><br><span class="line"></span><br><span class="line">:) use system;</span><br><span class="line"></span><br><span class="line">:) select * from clusters;</span><br><span class="line"></span><br><span class="line">SELECT *</span><br><span class="line">FROM clusters </span><br><span class="line"></span><br><span class="line">┌─cluster─┬─shard_num─┬─shard_weight─┬─replica_num─┬─host_name─────┬─host_address──┬─port─┬─is_local─┬─user────┬─default_database─┐</span><br><span class="line">│ test    │         1 │            1 │           1 │ 192.168.1.1   │ 192.168.1.1   │ 9000 │        0 │ default │                  │</span><br><span class="line">│ test    │         2 │            1 │           1 │ 192.168.1.2   │ 192.168.1.2   │ 9000 │        1 │ default │                  │</span><br><span class="line">│ test    │         3 │            1 │           1 │ 192.168.1.3   │ 192.168.1.3   │ 9000 │        0 │ default │                  │</span><br><span class="line">│ test    │         4 │            1 │           1 │ 192.168.1.4   │ 192.168.1.4   │ 9000 │        0 │ default │                  │</span><br><span class="line">└─────────┴───────────┴──────────────┴─────────────┴───────────────┴───────────────┴──────┴──────────┴─────────┴──────────────────┘</span><br><span class="line"></span><br><span class="line">4 rows in set. Elapsed: 0.001 sec.</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -476,8 +503,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -492,7 +528,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">3</span>
+                    <span class="site-state-item-count">5</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -511,7 +547,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">3</span>
+                      
+                    
+                    <span class="site-state-item-count">4</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -530,7 +568,11 @@
                     
                       
                     
-                    <span class="site-state-item-count">3</span>
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">5</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -556,6 +598,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装源"><span class="nav-number">1.</span> <span class="nav-text">安装源</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#环境准备"><span class="nav-number">2.</span> <span class="nav-text">环境准备</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#测试环境4台服务器"><span class="nav-number">2.1.</span> <span class="nav-text">测试环境4台服务器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#测试环境Zookeeper集群"><span class="nav-number">2.2.</span> <span class="nav-text">测试环境Zookeeper集群</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装clickhouse"><span class="nav-number">3.</span> <span class="nav-text">安装clickhouse</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装依赖"><span class="nav-number">3.1.</span> <span class="nav-text">安装依赖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#增加yum-repo"><span class="nav-number">3.2.</span> <span class="nav-text">增加yum.repo</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#刷新yum缓存、安装"><span class="nav-number">3.3.</span> <span class="nav-text">刷新yum缓存、安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改配置文件"><span class="nav-number">3.4.</span> <span class="nav-text">修改配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建相关目录"><span class="nav-number">3.5.</span> <span class="nav-text">创建相关目录</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#启动服务"><span class="nav-number">4.</span> <span class="nav-text">启动服务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#启动"><span class="nav-number">4.1.</span> <span class="nav-text">启动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#测试"><span class="nav-number">4.2.</span> <span class="nav-text">测试</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       

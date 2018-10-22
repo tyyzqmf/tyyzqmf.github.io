@@ -109,25 +109,25 @@
 
 
 
-  <meta name="description" content="异常信息12345Error: java.lang.RuntimeException: org.apache.hadoop.hive.ql.metadata.HiveFatalException: [Error 20004]: Fatal error occurred when node tried to create too many dynamic partitions. The maximu">
-<meta name="keywords" content="动态分区">
+  <meta name="description" content="ibis详细介绍官网：https://docs.ibis-project.org/index.html ibis是一个新的 Python 数据分析框架，它用来桥接本地Python环境（如：pandas、scikit-learn）与远程大数据环境（如：hdfs、hive、impala、spark等）。ibis目标是让数据科学家和数据工程师们处理大型数据时，能够像处理小中型数据一样的高效，充分利用单机">
+<meta name="keywords" content="ibis,pandas">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hive动态分区异常问题">
-<meta property="og:url" content="http://yoursite.com/2018/10/17/Hive动态分区异常问题/index.html">
+<meta property="og:title" content="Python数据分析框架Ibis">
+<meta property="og:url" content="http://yoursite.com/2018/10/22/Python数据分析框架Ibis/index.html">
 <meta property="og:site_name" content="5211小站">
-<meta property="og:description" content="异常信息12345Error: java.lang.RuntimeException: org.apache.hadoop.hive.ql.metadata.HiveFatalException: [Error 20004]: Fatal error occurred when node tried to create too many dynamic partitions. The maximu">
+<meta property="og:description" content="ibis详细介绍官网：https://docs.ibis-project.org/index.html ibis是一个新的 Python 数据分析框架，它用来桥接本地Python环境（如：pandas、scikit-learn）与远程大数据环境（如：hdfs、hive、impala、spark等）。ibis目标是让数据科学家和数据工程师们处理大型数据时，能够像处理小中型数据一样的高效，充分利用单机">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-10-17T14:55:19.756Z">
+<meta property="og:updated_time" content="2018-10-22T10:37:56.223Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hive动态分区异常问题">
-<meta name="twitter:description" content="异常信息12345Error: java.lang.RuntimeException: org.apache.hadoop.hive.ql.metadata.HiveFatalException: [Error 20004]: Fatal error occurred when node tried to create too many dynamic partitions. The maximu">
+<meta name="twitter:title" content="Python数据分析框架Ibis">
+<meta name="twitter:description" content="ibis详细介绍官网：https://docs.ibis-project.org/index.html ibis是一个新的 Python 数据分析框架，它用来桥接本地Python环境（如：pandas、scikit-learn）与远程大数据环境（如：hdfs、hive、impala、spark等）。ibis目标是让数据科学家和数据工程师们处理大型数据时，能够像处理小中型数据一样的高效，充分利用单机">
 
 
 
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/10/17/Hive动态分区异常问题/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/10/22/Python数据分析框架Ibis/"/>
 
 
 
@@ -137,7 +137,7 @@
   };
 </script>
 
-  <title>Hive动态分区异常问题 | 5211小站</title>
+  <title>Python数据分析框架Ibis | 5211小站</title>
   
 
 
@@ -298,7 +298,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/17/Hive动态分区异常问题/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/22/Python数据分析框架Ibis/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="quemf">
@@ -315,7 +315,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Hive动态分区异常问题
+          <h1 class="post-title" itemprop="name headline">Python数据分析框架Ibis
               
             
           </h1>
@@ -340,7 +340,7 @@
                 
               
 
-              <time title="创建时间：2018-10-17 22:57:15 / 修改时间：14:55:19" itemprop="dateCreated datePublished" datetime="2018-10-17T22:57:15+00:00">2018-10-17</time>
+              <time title="创建时间：2018-10-22 10:34:04 / 修改时间：10:37:56" itemprop="dateCreated datePublished" datetime="2018-10-22T10:34:04+00:00">2018-10-22</time>
             
 
             
@@ -362,7 +362,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/hive/" itemprop="url" rel="index"><span itemprop="name">hive</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
 
                 
                 
@@ -396,14 +396,16 @@
       
 
       
-        <h2 id="异常信息"><a href="#异常信息" class="headerlink" title="异常信息"></a>异常信息</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Error: java.lang.RuntimeException: </span><br><span class="line">org.apache.hadoop.hive.ql.metadata.HiveFatalException: </span><br><span class="line">[Error 20004]: Fatal error occurred when node tried to create too many dynamic partitions. </span><br><span class="line">The maximum number of dynamic partitions is controlled by hive.exec.max.dynamic.partitions and hive.exec.max.dynamic.partitions.pernode. </span><br><span class="line">Maximum was set to: 100</span><br></pre></td></tr></table></figure>
-<h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><p>Hive对其创建的动态分区数量实施限制。默认值为每个节点100个动态分区，所有节点的总（默认）限制为1000个动态分区。但是，这可以调整。</p>
-<h2 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">set hive.exec.dynamic.partition=true;</span><br><span class="line">set hive.exec.max.dynamic.partitions=2048;</span><br><span class="line">set hive.exec.max.dynamic.partitions.pernode=256;</span><br></pre></td></tr></table></figure>
-<p>用以上设置后不能保证正常，有时候还需要设置reduce数来配合动态分区使用</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set mapred.reduce.tasks=10;</span><br></pre></td></tr></table></figure>
-<p>这几个参数需要满足一下条件：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dynamic.partitions / dynamic.partitions.pernode &lt;=mapred.reduce.tasks</span><br></pre></td></tr></table></figure>
-<p><strong>比如上面的例子：2048 / 256 = 8，如果mapred.reduce.tasks小于8就会报错，而hive默认reduce数是跟具数据量来动态调整的，所以有时候需要手动调整</strong></p>
+        <h2 id="ibis详细介绍"><a href="#ibis详细介绍" class="headerlink" title="ibis详细介绍"></a>ibis详细介绍</h2><p>官网：<a href="https://docs.ibis-project.org/index.html" target="_blank" rel="noopener">https://docs.ibis-project.org/index.html</a></p>
+<p>ibis是一个新的 Python 数据分析框架，它用来桥接本地Python环境（如：pandas、scikit-learn）与远程大数据环境（如：hdfs、hive、impala、spark等）。ibis目标是让数据科学家和数据工程师们处理大型数据时，能够像处理小中型数据一样的高效，充分利用<strong>单机资源</strong>。</p>
+<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install ibis-framework</span><br></pre></td></tr></table></figure>
+<h2 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h2><p>实现以下SQL：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// ibis 默认数据量10000</span><br><span class="line">SELECT * FROM d.t LIMIT 10000;</span><br></pre></td></tr></table></figure>
+<p>ibis的实现：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">import ibis</span><br><span class="line"># 客户端连接</span><br><span class="line">client = ibis.impala.connect(host=&apos;0.0.0.0&apos;, port=20050, auth_mechanism=&quot;GSSAPI&quot;, kerberos_service_name=&apos;impala&apos;)</span><br><span class="line"># 访问表</span><br><span class="line">table = client.table(&apos;t&apos;, database=&apos;d&apos;)</span><br><span class="line"># 查询</span><br><span class="line">df = table.execute()</span><br><span class="line"># 返回结果就是：pandas.core.frame.DataFrame类型</span><br><span class="line">df.describe</span><br></pre></td></tr></table></figure></p>
+<h2 id="稍微复杂一点的案例"><a href="#稍微复杂一点的案例" class="headerlink" title="稍微复杂一点的案例"></a>稍微复杂一点的案例</h2><p>实现以下SQL：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">SELECT count(distinct(id)), pt_dt</span><br><span class="line">FROM d.t</span><br><span class="line">WHERE (pt_dt &gt;= &quot;2018-08-01&quot;</span><br><span class="line">       AND pt_dt &lt;= &quot;2018-08-28&quot;)</span><br><span class="line">GROUP BY pt_dt;</span><br></pre></td></tr></table></figure>
+<p>ibis的实现：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">import ibis</span><br><span class="line">client = ibis.impala.connect(host=&apos;0.0.0.0&apos;, port=20050, auth_mechanism=&quot;GSSAPI&quot;, kerberos_service_name=&apos;impala&apos;)</span><br><span class="line"></span><br><span class="line"># SELECT</span><br><span class="line">table = client.table(&apos;t&apos;, database=&apos;d&apos;)</span><br><span class="line">t = table[&apos;id&apos;, &apos;pt_dt&apos;]</span><br><span class="line"># WHERE</span><br><span class="line">filtered = t.filter([t.pt_dt &gt;= &quot;2018-08-20&quot;, t.pt_dt &lt;= &quot;2018-08-29&quot;])</span><br><span class="line"># DISTINCT</span><br><span class="line">metric = t.uid.nunique()</span><br><span class="line"># GROUP BY</span><br><span class="line">expr = (filtered.group_by(&apos;pt_dt&apos;).aggregate(unique_uid=metric))</span><br><span class="line"># RUN</span><br><span class="line">df = expr.execute()</span><br><span class="line">df.describe</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -424,7 +426,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/动态分区/" rel="tag"># 动态分区</a>
+            <a href="/tags/ibis/" rel="tag"># ibis</a>
+          
+            <a href="/tags/pandas/" rel="tag"># pandas</a>
           
         </div>
       
@@ -437,8 +441,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/10/16/博客从0到1/" rel="next" title="博客从0到1">
-                <i class="fa fa-chevron-left"></i> 博客从0到1
+              <a href="/2018/10/17/Hive动态分区异常问题/" rel="next" title="Hive动态分区异常问题">
+                <i class="fa fa-chevron-left"></i> Hive动态分区异常问题
               </a>
             
           </div>
@@ -447,8 +451,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/10/22/Python数据分析框架Ibis/" rel="prev" title="Python数据分析框架Ibis">
-                Python数据分析框架Ibis <i class="fa fa-chevron-right"></i>
+              <a href="/2018/10/22/ClickHouse本地表与分布式表/" rel="prev" title="ClickHouse本地表与分布式表">
+                ClickHouse本地表与分布式表 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -599,7 +603,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#异常信息"><span class="nav-number">1.</span> <span class="nav-text">异常信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原因"><span class="nav-number">2.</span> <span class="nav-text">原因</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解决办法"><span class="nav-number">3.</span> <span class="nav-text">解决办法</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#ibis详细介绍"><span class="nav-number">1.</span> <span class="nav-text">ibis详细介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#环境"><span class="nav-number">2.</span> <span class="nav-text">环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#案例"><span class="nav-number">3.</span> <span class="nav-text">案例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#稍微复杂一点的案例"><span class="nav-number">4.</span> <span class="nav-text">稍微复杂一点的案例</span></a></li></ol></div>
             
 
           </div>
