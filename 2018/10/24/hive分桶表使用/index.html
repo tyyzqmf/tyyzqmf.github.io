@@ -109,25 +109,28 @@
 
 
 
-  <meta name="description" content="异常信息12345Error: java.lang.RuntimeException: org.apache.hadoop.hive.ql.metadata.HiveFatalException: [Error 20004]: Fatal error occurred when node tried to create too many dynamic partitions. The maximu">
-<meta name="keywords" content="动态分区">
+  <meta name="description" content="分区和分桶分区：  分区是表的部分列的集合 在许多场景下，可以通过分区的方法减少每一次扫描总数据量 每一个子目录包含了分区对应的列名和每一列的值，分区列不存储在数据文件中  分桶：  通过对指定列进行哈希计算来实现的，通过哈希值将一个列名下的数据切分为一组桶，并使每个桶对应于该列名下的一个存储文件 hive使用对分桶所用的值进行hash，并用hash结果除以桶的个数做取余运算的方式来分桶，保证了每">
+<meta name="keywords" content="分桶">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hive动态分区异常问题">
-<meta property="og:url" content="http://yoursite.com/2018/10/17/Hive动态分区异常问题/index.html">
+<meta property="og:title" content="hive分桶表使用">
+<meta property="og:url" content="http://yoursite.com/2018/10/24/hive分桶表使用/index.html">
 <meta property="og:site_name" content="5211小站">
-<meta property="og:description" content="异常信息12345Error: java.lang.RuntimeException: org.apache.hadoop.hive.ql.metadata.HiveFatalException: [Error 20004]: Fatal error occurred when node tried to create too many dynamic partitions. The maximu">
+<meta property="og:description" content="分区和分桶分区：  分区是表的部分列的集合 在许多场景下，可以通过分区的方法减少每一次扫描总数据量 每一个子目录包含了分区对应的列名和每一列的值，分区列不存储在数据文件中  分桶：  通过对指定列进行哈希计算来实现的，通过哈希值将一个列名下的数据切分为一组桶，并使每个桶对应于该列名下的一个存储文件 hive使用对分桶所用的值进行hash，并用hash结果除以桶的个数做取余运算的方式来分桶，保证了每">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-10-17T14:55:19.756Z">
+<meta property="og:image" content="http://yoursite.com/images/12.png">
+<meta property="og:image" content="http://yoursite.com/images/11.png">
+<meta property="og:updated_time" content="2018-10-24T12:10:37.978Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hive动态分区异常问题">
-<meta name="twitter:description" content="异常信息12345Error: java.lang.RuntimeException: org.apache.hadoop.hive.ql.metadata.HiveFatalException: [Error 20004]: Fatal error occurred when node tried to create too many dynamic partitions. The maximu">
+<meta name="twitter:title" content="hive分桶表使用">
+<meta name="twitter:description" content="分区和分桶分区：  分区是表的部分列的集合 在许多场景下，可以通过分区的方法减少每一次扫描总数据量 每一个子目录包含了分区对应的列名和每一列的值，分区列不存储在数据文件中  分桶：  通过对指定列进行哈希计算来实现的，通过哈希值将一个列名下的数据切分为一组桶，并使每个桶对应于该列名下的一个存储文件 hive使用对分桶所用的值进行hash，并用hash结果除以桶的个数做取余运算的方式来分桶，保证了每">
+<meta name="twitter:image" content="http://yoursite.com/images/12.png">
 
 
 
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/10/17/Hive动态分区异常问题/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/10/24/hive分桶表使用/"/>
 
 
 
@@ -137,7 +140,7 @@
   };
 </script>
 
-  <title>Hive动态分区异常问题 | 5211小站</title>
+  <title>hive分桶表使用 | 5211小站</title>
   
 
 
@@ -298,7 +301,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/17/Hive动态分区异常问题/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/24/hive分桶表使用/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="quemf">
@@ -315,7 +318,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Hive动态分区异常问题
+          <h1 class="post-title" itemprop="name headline">hive分桶表使用
               
             
           </h1>
@@ -340,7 +343,7 @@
                 
               
 
-              <time title="创建时间：2018-10-17 22:57:15 / 修改时间：14:55:19" itemprop="dateCreated datePublished" datetime="2018-10-17T22:57:15+00:00">2018-10-17</time>
+              <time title="创建时间：2018-10-24 12:10:02 / 修改时间：12:10:37" itemprop="dateCreated datePublished" datetime="2018-10-24T12:10:02+00:00">2018-10-24</time>
             
 
             
@@ -396,14 +399,36 @@
       
 
       
-        <h2 id="异常信息"><a href="#异常信息" class="headerlink" title="异常信息"></a>异常信息</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Error: java.lang.RuntimeException: </span><br><span class="line">org.apache.hadoop.hive.ql.metadata.HiveFatalException: </span><br><span class="line">[Error 20004]: Fatal error occurred when node tried to create too many dynamic partitions. </span><br><span class="line">The maximum number of dynamic partitions is controlled by hive.exec.max.dynamic.partitions and hive.exec.max.dynamic.partitions.pernode. </span><br><span class="line">Maximum was set to: 100</span><br></pre></td></tr></table></figure>
-<h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><p>Hive对其创建的动态分区数量实施限制。默认值为每个节点100个动态分区，所有节点的总（默认）限制为1000个动态分区。但是，这可以调整。</p>
-<h2 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">set hive.exec.dynamic.partition=true;</span><br><span class="line">set hive.exec.max.dynamic.partitions=2048;</span><br><span class="line">set hive.exec.max.dynamic.partitions.pernode=256;</span><br></pre></td></tr></table></figure>
-<p>用以上设置后不能保证正常，有时候还需要设置reduce数来配合动态分区使用</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set mapred.reduce.tasks=10;</span><br></pre></td></tr></table></figure>
-<p>这几个参数需要满足一下条件：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dynamic.partitions / dynamic.partitions.pernode &lt;=mapred.reduce.tasks</span><br></pre></td></tr></table></figure>
-<p><strong>比如上面的例子：2048 / 256 = 8，如果mapred.reduce.tasks小于8就会报错，而hive默认reduce数是跟具数据量来动态调整的，所以有时候需要手动调整</strong></p>
+        <h2 id="分区和分桶"><a href="#分区和分桶" class="headerlink" title="分区和分桶"></a>分区和分桶</h2><p><strong>分区：</strong></p>
+<ul>
+<li>分区是表的部分列的集合</li>
+<li>在许多场景下，可以通过分区的方法减少每一次扫描总数据量</li>
+<li>每一个子目录包含了分区对应的列名和每一列的值，分区列不存储在数据文件中</li>
+</ul>
+<p><strong>分桶：</strong></p>
+<ul>
+<li>通过对指定列进行哈希计算来实现的，通过哈希值将一个列名下的数据切分为一组桶，并使每个桶对应于该列名下的一个存储文件</li>
+<li>hive使用对分桶所用的值进行hash，并用hash结果除以桶的个数做取余运算的方式来分桶，<strong>保证了每个桶中都有数据，而且均匀分布</strong></li>
+</ul>
+<p>虽然分桶是hive的建表机制，但是，从实际测试结果来看，分桶确实对impala的JOIN查询性能有所提升，怀疑是一下原因：</p>
+<ul>
+<li>增加文件数，增加并发度</li>
+<li>根据uid数据均匀分布多个桶，很大程度上增加了本地命中率</li>
+<li>桶内排序+impala统计信息，min/max存储索引加速过滤</li>
+</ul>
+<p><strong>更新</strong><br>impala是能识别hive的分桶信息的：</p>
+<p><img src="/images/12.png" alt=""></p>
+<h2 id="创建分桶表"><a href="#创建分桶表" class="headerlink" title="创建分桶表"></a>创建分桶表</h2><p>以下SQL，创建一个按pt_dt分区，按uid分10个桶的表，并且每个桶内按uid排序</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE t (</span><br><span class="line">    uid STRING COMMENT &apos;用户uid&apos;,</span><br><span class="line">) </span><br><span class="line">PARTITIONED BY (pt_dt STRING)</span><br><span class="line">CLUSTERED BY (uid) SORTED BY (uid ASC) INTO 10 BUCKETS</span><br><span class="line">ROW FORMAT delimited FIELDS TERMINATED BY &apos;,&apos;</span><br><span class="line">STORED AS PARQUET TBLPROPERTIES(&apos;parquet.compression&apos;=&apos;SNAPPY&apos;);</span><br></pre></td></tr></table></figure>
+<h2 id="插入数据"><a href="#插入数据" class="headerlink" title="插入数据"></a>插入数据</h2><p>注意：插入数据必须设置以下参数，<strong>不然会造成分桶数据不均</strong>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SET hive.enforce.bucketing = true;</span><br></pre></td></tr></table></figure>
+<p>以下参数也需要配合设置<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 开启动态分区相关配置</span><br><span class="line">SET hive.exec.dynamic.partition=true;</span><br><span class="line">SET hive.exec.dynamic.partition.mode=nonstrict;</span><br><span class="line"># 根据分区数和数据量适当调整</span><br><span class="line">SET hive.exec.max.dynamic.partitions=2048;</span><br><span class="line">SET hive.exec.max.dynamic.partitions.pernode=512;</span><br><span class="line">SET mapreduce.map.memory.mb=8000;</span><br><span class="line">SET mapred.reduce.tasks=100;</span><br></pre></td></tr></table></figure></p>
+<p>插入数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">INSERT OVERWRITE TABLE t PARTITION(pt_dt) </span><br><span class="line">SELECT * from t2;</span><br></pre></td></tr></table></figure>
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>如果在同一分区，不同批次INSERT INTO的数据，分桶文件不会追加，而是重新生成<strong>大量文件</strong></p>
+<p>比如，向同一分区分两次插入数据，分桶文件会*2</p>
+<p>所以尽量使用INSERT OVERWRITE，避免INSERT INTO操作</p>
+<p><img src="/images/11.png" alt=""></p>
 
       
     </div>
@@ -424,7 +449,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/动态分区/" rel="tag"># 动态分区</a>
+            <a href="/tags/分桶/" rel="tag"># 分桶</a>
           
         </div>
       
@@ -437,8 +462,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/10/16/博客从0到1/" rel="next" title="博客从0到1">
-                <i class="fa fa-chevron-left"></i> 博客从0到1
+              <a href="/2018/10/22/ClickHouse本地表与分布式表/" rel="next" title="ClickHouse本地表与分布式表">
+                <i class="fa fa-chevron-left"></i> ClickHouse本地表与分布式表
               </a>
             
           </div>
@@ -447,8 +472,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/10/22/Python数据分析框架Ibis/" rel="prev" title="Python数据分析框架Ibis">
-                Python数据分析框架Ibis <i class="fa fa-chevron-right"></i>
+              <a href="/2018/10/24/add-apt-repository设置代理/" rel="prev" title="add-apt-repository设置代理">
+                add-apt-repository设置代理 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -611,7 +636,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#异常信息"><span class="nav-number">1.</span> <span class="nav-text">异常信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原因"><span class="nav-number">2.</span> <span class="nav-text">原因</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解决办法"><span class="nav-number">3.</span> <span class="nav-text">解决办法</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#分区和分桶"><span class="nav-number">1.</span> <span class="nav-text">分区和分桶</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建分桶表"><span class="nav-number">2.</span> <span class="nav-text">创建分桶表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#插入数据"><span class="nav-number">3.</span> <span class="nav-text">插入数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#问题"><span class="nav-number">4.</span> <span class="nav-text">问题</span></a></li></ol></div>
             
 
           </div>

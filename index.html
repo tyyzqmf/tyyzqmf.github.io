@@ -294,6 +294,356 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/24/add-apt-repository设置代理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="quemf">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="5211小站">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/10/24/add-apt-repository设置代理/" itemprop="url">
+                  add-apt-repository设置代理
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-10-24 20:12:16 / 修改时间：12:16:17" itemprop="dateCreated datePublished" datetime="2018-10-24T20:12:16+00:00">2018-10-24</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/操作系统/" itemprop="url" rel="index"><span itemprop="name">操作系统</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>在使用add-apt-repository或apt-get过程中需要配置代理安装</p>
+<p>但是，很多情况下export http_proxy &amp; https_proxy不管用</p>
+<p><strong>解决方法</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">export http_proxy=http://&lt;proxy&gt;:&lt;port&gt;</span><br><span class="line">export https_proxy=http://&lt;proxy&gt;:&lt;port&gt;</span><br><span class="line">sudo -E add-apt-repository ppa:linaro-maintainers/toolchain</span><br></pre></td></tr></table></figure>
+<p>其实根本原因是，设置代理的用户和使用命令的用户不是同一个</p>
+<p>可以用-E告诉sudo保留当前的环境变量</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/24/hive分桶表使用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="quemf">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="5211小站">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/10/24/hive分桶表使用/" itemprop="url">
+                  hive分桶表使用
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-10-24 12:10:02 / 修改时间：12:10:37" itemprop="dateCreated datePublished" datetime="2018-10-24T12:10:02+00:00">2018-10-24</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/hive/" itemprop="url" rel="index"><span itemprop="name">hive</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="分区和分桶"><a href="#分区和分桶" class="headerlink" title="分区和分桶"></a>分区和分桶</h2><p><strong>分区：</strong></p>
+<ul>
+<li>分区是表的部分列的集合</li>
+<li>在许多场景下，可以通过分区的方法减少每一次扫描总数据量</li>
+<li>每一个子目录包含了分区对应的列名和每一列的值，分区列不存储在数据文件中</li>
+</ul>
+<p><strong>分桶：</strong></p>
+<ul>
+<li>通过对指定列进行哈希计算来实现的，通过哈希值将一个列名下的数据切分为一组桶，并使每个桶对应于该列名下的一个存储文件</li>
+<li>hive使用对分桶所用的值进行hash，并用hash结果除以桶的个数做取余运算的方式来分桶，<strong>保证了每个桶中都有数据，而且均匀分布</strong></li>
+</ul>
+<p>虽然分桶是hive的建表机制，但是，从实际测试结果来看，分桶确实对impala的JOIN查询性能有所提升，怀疑是一下原因：</p>
+<ul>
+<li>增加文件数，增加并发度</li>
+<li>根据uid数据均匀分布多个桶，很大程度上增加了本地命中率</li>
+<li>桶内排序+impala统计信息，min/max存储索引加速过滤</li>
+</ul>
+<p><strong>更新</strong><br>impala是能识别hive的分桶信息的：</p>
+<p><img src="/images/12.png" alt=""></p>
+<h2 id="创建分桶表"><a href="#创建分桶表" class="headerlink" title="创建分桶表"></a>创建分桶表</h2><p>以下SQL，创建一个按pt_dt分区，按uid分10个桶的表，并且每个桶内按uid排序</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE t (</span><br><span class="line">    uid STRING COMMENT &apos;用户uid&apos;,</span><br><span class="line">) </span><br><span class="line">PARTITIONED BY (pt_dt STRING)</span><br><span class="line">CLUSTERED BY (uid) SORTED BY (uid ASC) INTO 10 BUCKETS</span><br><span class="line">ROW FORMAT delimited FIELDS TERMINATED BY &apos;,&apos;</span><br><span class="line">STORED AS PARQUET TBLPROPERTIES(&apos;parquet.compression&apos;=&apos;SNAPPY&apos;);</span><br></pre></td></tr></table></figure>
+<h2 id="插入数据"><a href="#插入数据" class="headerlink" title="插入数据"></a>插入数据</h2><p>注意：插入数据必须设置以下参数，<strong>不然会造成分桶数据不均</strong>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SET hive.enforce.bucketing = true;</span><br></pre></td></tr></table></figure>
+<p>以下参数也需要配合设置<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 开启动态分区相关配置</span><br><span class="line">SET hive.exec.dynamic.partition=true;</span><br><span class="line">SET hive.exec.dynamic.partition.mode=nonstrict;</span><br><span class="line"># 根据分区数和数据量适当调整</span><br><span class="line">SET hive.exec.max.dynamic.partitions=2048;</span><br><span class="line">SET hive.exec.max.dynamic.partitions.pernode=512;</span><br><span class="line">SET mapreduce.map.memory.mb=8000;</span><br><span class="line">SET mapred.reduce.tasks=100;</span><br></pre></td></tr></table></figure></p>
+<p>插入数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">INSERT OVERWRITE TABLE t PARTITION(pt_dt) </span><br><span class="line">SELECT * from t2;</span><br></pre></td></tr></table></figure>
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>如果在同一分区，不同批次INSERT INTO的数据，分桶文件不会追加，而是重新生成<strong>大量文件</strong></p>
+<p>比如，向同一分区分两次插入数据，分桶文件会*2</p>
+<p>所以尽量使用INSERT OVERWRITE，避免INSERT INTO操作</p>
+<p><img src="/images/11.png" alt=""></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/22/ClickHouse本地表与分布式表/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1248,7 +1598,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">5</span>
+                    <span class="site-state-item-count">7</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1269,7 +1619,11 @@
                     
                       
                     
-                    <span class="site-state-item-count">4</span>
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">5</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -1292,7 +1646,15 @@
                     
                       
                     
-                    <span class="site-state-item-count">5</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">7</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
