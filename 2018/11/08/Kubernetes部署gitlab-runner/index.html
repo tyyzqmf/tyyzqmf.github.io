@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+<meta name="google-site-verification" content="p1AOCOaE4bCsS0m9iDC-roUaImYQdigh4_dTd-7G8hM" />
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.4.2" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.4.2">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.4.2">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.4.2">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.4.2" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.4.2',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="背景首先，不得不吐槽一下gitlab的官方文档，写得确实很不清楚：https://docs.gitlab.com/runner/install/kubernetes.html我按照这个文档的步骤是没成功的，最后报错信息是 123452018/11/8 上午9:57:03 Listen address not defined, session server disabled builds=02018">
+<meta name="keywords" content="Kubernetes,gitlab-runner">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kubernetes部署gitlab-runner">
+<meta property="og:url" content="http://yoursite.com/2018/11/08/Kubernetes部署gitlab-runner/index.html">
+<meta property="og:site_name" content="5211小站">
+<meta property="og:description" content="背景首先，不得不吐槽一下gitlab的官方文档，写得确实很不清楚：https://docs.gitlab.com/runner/install/kubernetes.html我按照这个文档的步骤是没成功的，最后报错信息是 123452018/11/8 上午9:57:03 Listen address not defined, session server disabled builds=02018">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/images/gr00.png">
+<meta property="og:image" content="http://yoursite.com/images/gr01.png">
+<meta property="og:image" content="http://yoursite.com/images/gr02.png">
+<meta property="og:image" content="http://yoursite.com/images/gr03.png">
+<meta property="og:image" content="http://yoursite.com/images/gr04.png">
+<meta property="og:image" content="http://yoursite.com/images/gr05.png">
+<meta property="og:image" content="http://yoursite.com/images/gr06.png">
+<meta property="og:updated_time" content="2018-11-08T02:43:42.227Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Kubernetes部署gitlab-runner">
+<meta name="twitter:description" content="背景首先，不得不吐槽一下gitlab的官方文档，写得确实很不清楚：https://docs.gitlab.com/runner/install/kubernetes.html我按照这个文档的步骤是没成功的，最后报错信息是 123452018/11/8 上午9:57:03 Listen address not defined, session server disabled builds=02018">
+<meta name="twitter:image" content="http://yoursite.com/images/gr00.png">
+
+
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/11/08/Kubernetes部署gitlab-runner/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Kubernetes部署gitlab-runner | 5211小站</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">5211小站</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/08/Kubernetes部署gitlab-runner/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="quemf">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="5211小站">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Kubernetes部署gitlab-runner
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-11-08 10:37:45 / 修改时间：02:43:42" itemprop="dateCreated datePublished" datetime="2018-11-08T10:37:45+00:00">2018-11-08</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/gitlab/" itemprop="url" rel="index"><span itemprop="name">gitlab</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>首先，不得不吐槽一下gitlab的官方文档，写得确实很不清楚：<a href="https://docs.gitlab.com/runner/install/kubernetes.html" target="_blank" rel="noopener">https://docs.gitlab.com/runner/install/kubernetes.html</a><br>我按照这个文档的步骤是没成功的，最后报错信息是</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">2018/11/8 上午9:57:03 Listen address not defined, session server disabled builds=0</span><br><span class="line">2018/11/8 上午9:57:04 ERROR: Checking for jobs... forbidden runner=xhAyxB5x</span><br><span class="line">2018/11/8 上午9:57:08 ERROR: Checking for jobs... forbidden runner=xhAyxB5x</span><br><span class="line">2018/11/8 上午9:57:11 ERROR: Checking for jobs... forbidden runner=xhAyxB5x</span><br><span class="line">2018/11/8 上午9:57:11 ERROR: Runner http://1.2.3.4/*** is not healthy and will be disabled!</span><br></pre></td></tr></table></figure>
+<h2 id="原因分析"><a href="#原因分析" class="headerlink" title="原因分析"></a>原因分析</h2><p>ConfigMap，我也是折腾好久才看明白官方文档的这个Note：</p>
+<p><img src="/images/gr00.png" alt=""></p>
+<p>第一：这个config.toml的token是runner注册成功后生成的token（或者说是一个随机ID），并不是注册token（registration token）</p>
+<p>第二：注册token（registration token）是什么呢？就是gitlab runners管理界面那个token</p>
+<p><img src="/images/gr01.png" alt=""></p>
+<p>注意！我们需要的是注册好的runner的token，应该是详细信息里的这个：</p>
+<p><img src="/images/gr02.png" alt=""></p>
+<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><p>1、如果你有注册好Runner，想从原来的模式切换到k8s，那么按照官方的配置，选择正确的token是没有问题的。</p>
+<p>2、但是！大多数情况我们是需要直接从k8s新注册runner，有些同学可能会说，直接在官方的Pod中命令行模式注册就行。我也试过，失败！原因是ConfigMap挂载到容器的config.toml文件是只读的，在容器内gitlab-ci-multi-runner register填的参数无法生效。以下是我的方法，简单来说就是：不挂载ConfigMap，手动register。</p>
+<h2 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h2><p>我用的是Rancher做集群管理，所以操作都是在Rancher的控制台</p>
+<h3 id="创建namespace"><a href="#创建namespace" class="headerlink" title="创建namespace"></a>创建namespace</h3><p>选择集群-&gt;项目/命名空间-&gt;项目System-&gt;添加命名空间</p>
+<p><img src="/images/gr03.png" alt=""></p>
+<h3 id="部署gitlab-runner服务"><a href="#部署gitlab-runner服务" class="headerlink" title="部署gitlab-runner服务"></a>部署gitlab-runner服务</h3><p>项目System-&gt;工作负载-&gt;导入YAML</p>
+<p><img src="/images/gr04.png" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: extensions/v1beta1</span><br><span class="line">kind: Deployment</span><br><span class="line">metadata:</span><br><span class="line">  name: gitlab-runner</span><br><span class="line">  namespace: gitlab</span><br><span class="line">spec:</span><br><span class="line">  replicas: 1</span><br><span class="line">  selector:</span><br><span class="line">    matchLabels:</span><br><span class="line">      name: gitlab-runner</span><br><span class="line">  template:</span><br><span class="line">    metadata:</span><br><span class="line">      labels:</span><br><span class="line">        name: gitlab-runner</span><br><span class="line">    spec:</span><br><span class="line">      containers:</span><br><span class="line">      - args:</span><br><span class="line">        - run</span><br><span class="line">        image: gitlab/gitlab-runner:latest</span><br><span class="line">        imagePullPolicy: Always</span><br><span class="line">        name: gitlab-runner</span><br><span class="line">        volumeMounts:</span><br><span class="line">        - mountPath: /etc/ssl/certs</span><br><span class="line">          name: cacerts</span><br><span class="line">          readOnly: true</span><br><span class="line">      restartPolicy: Always</span><br><span class="line">      volumes:</span><br><span class="line">      - hostPath:</span><br><span class="line">          path: /usr/share/ca-certificates/mozilla</span><br><span class="line">        name: cacerts</span><br></pre></td></tr></table></figure>
+<p>几分钟后工作空间就会完成部署</p>
+<p><img src="/images/gr05.png" alt=""></p>
+<h3 id="注册激活gitlab-runner"><a href="#注册激活gitlab-runner" class="headerlink" title="注册激活gitlab-runner"></a>注册激活gitlab-runner</h3><p>直接通过Rancher进入Pod的命令行</p>
+<p><img src="/images/gr06.png" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">/# gitlab-ci-multi-runner register</span><br><span class="line">Runtime platform                                    arch=amd64 os=linux pid=44 revision=cf91d5e1 version=11.4.2</span><br><span class="line">Running in system-mode.</span><br><span class="line"></span><br><span class="line">Please enter the gitlab-ci coordinator URL (e.g. https://gitlab.com/):</span><br><span class="line">【gitlab服务IP地址】</span><br><span class="line">Please enter the gitlab-ci token for this runner:</span><br><span class="line">【这个是registration token】</span><br><span class="line">Please enter the gitlab-ci description for this runner:</span><br><span class="line">[gitlab-runner-5f98946bdd-zspjp]: frist runner</span><br><span class="line">Please enter the gitlab-ci tags for this runner (comma separated):</span><br><span class="line">k8s</span><br><span class="line">Registering runner... succeeded                     runner=xhAyxB5x</span><br><span class="line">Please enter the executor: docker, ssh, docker+machine, docker-ssh+machine, docker-ssh, parallels, shell, virtualbox, kubernetes:</span><br><span class="line">kubernetes</span><br><span class="line">Runner registered successfully. Feel free to start it, but if it&apos;s running already the config should be automatically reloaded!</span><br><span class="line">/# gitlab-ci-multi-runner start</span><br><span class="line">Runtime platform                                    arch=amd64 os=linux pid=56 revision=cf91d5e1 version=11.4.2</span><br></pre></td></tr></table></figure>
+<h3 id="确认注册成功"><a href="#确认注册成功" class="headerlink" title="确认注册成功"></a>确认注册成功</h3><p>注册并激活成功后会在gitlab控制台runner列表显示出来，而且Last contact会显示上次通信时间，如果没有请检查网络防火墙之类的</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Kubernetes/" rel="tag"># Kubernetes</a>
+          
+            <a href="/tags/gitlab-runner/" rel="tag"># gitlab-runner</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/08/Centos7 GitLab版本升级/" rel="next" title="Centos7 GitLab版本升级">
+                <i class="fa fa-chevron-left"></i> Centos7 GitLab版本升级
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">quemf</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">9</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">6</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">10</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原因分析"><span class="nav-number">2.</span> <span class="nav-text">原因分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解决方法"><span class="nav-number">3.</span> <span class="nav-text">解决方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#步骤"><span class="nav-number">4.</span> <span class="nav-text">步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#创建namespace"><span class="nav-number">4.1.</span> <span class="nav-text">创建namespace</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#部署gitlab-runner服务"><span class="nav-number">4.2.</span> <span class="nav-text">部署gitlab-runner服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#注册激活gitlab-runner"><span class="nav-number">4.3.</span> <span class="nav-text">注册激活gitlab-runner</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#确认注册成功"><span class="nav-number">4.4.</span> <span class="nav-text">确认注册成功</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">quemf</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.7.1</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Pisces</a> v6.4.2</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.4.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.4.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.4.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.4.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.4.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.4.2"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

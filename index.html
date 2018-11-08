@@ -294,6 +294,361 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/08/Kubernetes部署gitlab-runner/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="quemf">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="5211小站">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/08/Kubernetes部署gitlab-runner/" itemprop="url">
+                  Kubernetes部署gitlab-runner
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-11-08 10:37:45 / 修改时间：02:43:42" itemprop="dateCreated datePublished" datetime="2018-11-08T10:37:45+00:00">2018-11-08</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/gitlab/" itemprop="url" rel="index"><span itemprop="name">gitlab</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>首先，不得不吐槽一下gitlab的官方文档，写得确实很不清楚：<a href="https://docs.gitlab.com/runner/install/kubernetes.html" target="_blank" rel="noopener">https://docs.gitlab.com/runner/install/kubernetes.html</a><br>我按照这个文档的步骤是没成功的，最后报错信息是</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">2018/11/8 上午9:57:03 Listen address not defined, session server disabled builds=0</span><br><span class="line">2018/11/8 上午9:57:04 ERROR: Checking for jobs... forbidden runner=xhAyxB5x</span><br><span class="line">2018/11/8 上午9:57:08 ERROR: Checking for jobs... forbidden runner=xhAyxB5x</span><br><span class="line">2018/11/8 上午9:57:11 ERROR: Checking for jobs... forbidden runner=xhAyxB5x</span><br><span class="line">2018/11/8 上午9:57:11 ERROR: Runner http://1.2.3.4/*** is not healthy and will be disabled!</span><br></pre></td></tr></table></figure>
+<h2 id="原因分析"><a href="#原因分析" class="headerlink" title="原因分析"></a>原因分析</h2><p>ConfigMap，我也是折腾好久才看明白官方文档的这个Note：</p>
+<p><img src="/images/gr00.png" alt=""></p>
+<p>第一：这个config.toml的token是runner注册成功后生成的token（或者说是一个随机ID），并不是注册token（registration token）</p>
+<p>第二：注册token（registration token）是什么呢？就是gitlab runners管理界面那个token</p>
+<p><img src="/images/gr01.png" alt=""></p>
+<p>注意！我们需要的是注册好的runner的token，应该是详细信息里的这个：</p>
+<p><img src="/images/gr02.png" alt=""></p>
+<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><p>1、如果你有注册好Runner，想从原来的模式切换到k8s，那么按照官方的配置，选择正确的token是没有问题的。</p>
+<p>2、但是！大多数情况我们是需要直接从k8s新注册runner，有些同学可能会说，直接在官方的Pod中命令行模式注册就行。我也试过，失败！原因是ConfigMap挂载到容器的config.toml文件是只读的，在容器内gitlab-ci-multi-runner register填的参数无法生效。以下是我的方法，简单来说就是：不挂载ConfigMap，手动register。</p>
+<h2 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h2><p>我用的是Rancher做集群管理，所以操作都是在Rancher的控制台</p>
+<h3 id="创建namespace"><a href="#创建namespace" class="headerlink" title="创建namespace"></a>创建namespace</h3><p>选择集群-&gt;项目/命名空间-&gt;项目System-&gt;添加命名空间</p>
+<p><img src="/images/gr03.png" alt=""></p>
+<h3 id="部署gitlab-runner服务"><a href="#部署gitlab-runner服务" class="headerlink" title="部署gitlab-runner服务"></a>部署gitlab-runner服务</h3><p>项目System-&gt;工作负载-&gt;导入YAML</p>
+<p><img src="/images/gr04.png" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: extensions/v1beta1</span><br><span class="line">kind: Deployment</span><br><span class="line">metadata:</span><br><span class="line">  name: gitlab-runner</span><br><span class="line">  namespace: gitlab</span><br><span class="line">spec:</span><br><span class="line">  replicas: 1</span><br><span class="line">  selector:</span><br><span class="line">    matchLabels:</span><br><span class="line">      name: gitlab-runner</span><br><span class="line">  template:</span><br><span class="line">    metadata:</span><br><span class="line">      labels:</span><br><span class="line">        name: gitlab-runner</span><br><span class="line">    spec:</span><br><span class="line">      containers:</span><br><span class="line">      - args:</span><br><span class="line">        - run</span><br><span class="line">        image: gitlab/gitlab-runner:latest</span><br><span class="line">        imagePullPolicy: Always</span><br><span class="line">        name: gitlab-runner</span><br><span class="line">        volumeMounts:</span><br><span class="line">        - mountPath: /etc/ssl/certs</span><br><span class="line">          name: cacerts</span><br><span class="line">          readOnly: true</span><br><span class="line">      restartPolicy: Always</span><br><span class="line">      volumes:</span><br><span class="line">      - hostPath:</span><br><span class="line">          path: /usr/share/ca-certificates/mozilla</span><br><span class="line">        name: cacerts</span><br></pre></td></tr></table></figure>
+<p>几分钟后工作空间就会完成部署</p>
+<p><img src="/images/gr05.png" alt=""></p>
+<h3 id="注册激活gitlab-runner"><a href="#注册激活gitlab-runner" class="headerlink" title="注册激活gitlab-runner"></a>注册激活gitlab-runner</h3><p>直接通过Rancher进入Pod的命令行</p>
+<p><img src="/images/gr06.png" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">/# gitlab-ci-multi-runner register</span><br><span class="line">Runtime platform                                    arch=amd64 os=linux pid=44 revision=cf91d5e1 version=11.4.2</span><br><span class="line">Running in system-mode.</span><br><span class="line"></span><br><span class="line">Please enter the gitlab-ci coordinator URL (e.g. https://gitlab.com/):</span><br><span class="line">【gitlab服务IP地址】</span><br><span class="line">Please enter the gitlab-ci token for this runner:</span><br><span class="line">【这个是registration token】</span><br><span class="line">Please enter the gitlab-ci description for this runner:</span><br><span class="line">[gitlab-runner-5f98946bdd-zspjp]: frist runner</span><br><span class="line">Please enter the gitlab-ci tags for this runner (comma separated):</span><br><span class="line">k8s</span><br><span class="line">Registering runner... succeeded                     runner=xhAyxB5x</span><br><span class="line">Please enter the executor: docker, ssh, docker+machine, docker-ssh+machine, docker-ssh, parallels, shell, virtualbox, kubernetes:</span><br><span class="line">kubernetes</span><br><span class="line">Runner registered successfully. Feel free to start it, but if it&apos;s running already the config should be automatically reloaded!</span><br><span class="line">/# gitlab-ci-multi-runner start</span><br><span class="line">Runtime platform                                    arch=amd64 os=linux pid=56 revision=cf91d5e1 version=11.4.2</span><br></pre></td></tr></table></figure>
+<h3 id="确认注册成功"><a href="#确认注册成功" class="headerlink" title="确认注册成功"></a>确认注册成功</h3><p>注册并激活成功后会在gitlab控制台runner列表显示出来，而且Last contact会显示上次通信时间，如果没有请检查网络防火墙之类的</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/08/Centos7 GitLab版本升级/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="quemf">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="5211小站">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/08/Centos7 GitLab版本升级/" itemprop="url">
+                  Centos7 GitLab版本升级
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-11-08 10:27:19 / 修改时间：02:37:25" itemprop="dateCreated datePublished" datetime="2018-11-08T10:27:19+00:00">2018-11-08</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/gitlab/" itemprop="url" rel="index"><span itemprop="name">gitlab</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="前提条件"><a href="#前提条件" class="headerlink" title="前提条件"></a>前提条件</h2><p>只有小版本更新才能用我的方法！！！比如我是从gitlab-ce-10.1.2升级到gitlab-ce-10.8.6，因为夸大版本服务依赖变更很大，建议用官方的方法。而且，夸大版本备份文件不兼容。</p>
+<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><ul>
+<li>操作系统：CentOS Linux release 7.4.1708</li>
+<li>GitLab：gitlab-ce-10.1.2-ce.0.el7</li>
+<li>安装方式：rpm</li>
+</ul>
+<h2 id="资源"><a href="#资源" class="headerlink" title="资源"></a>资源</h2><p>下载gitlab-ce-10.8.6-ce.0.el7.x86_64.rpm</p>
+<ul>
+<li>官方地址：<a href="https://packages.gitlab.com/gitlab/gitlab-ce" target="_blank" rel="noopener">https://packages.gitlab.com/gitlab/gitlab-ce</a></li>
+<li>镜像地址：<a href="https://mirrors.tuna.tsinghua.edu.cn/gitlab-ce/yum/el7/" target="_blank" rel="noopener">https://mirrors.tuna.tsinghua.edu.cn/gitlab-ce/yum/el7/</a></li>
+</ul>
+<h2 id="备份"><a href="#备份" class="headerlink" title="备份"></a>备份</h2><p>gitlab默认把备份文件放到目录/var/opt/gitlab/backups，如果需要更改，请修改/etc/gitlab/gitlab.rb参数“backup_path”</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gitlab-rake gitlab:backup:create</span><br></pre></td></tr></table></figure>
+<h2 id="更新"><a href="#更新" class="headerlink" title="更新"></a>更新</h2><p>关闭部分服务，注意是<strong>部分</strong>，如果关闭全部服务可能会失败</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo gitlab-ctl stop unicorn</span><br><span class="line">sudo gitlab-ctl stop sidekiq</span><br><span class="line">sudo gitlab-ctl stop nginx</span><br></pre></td></tr></table></figure>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rpm -Uvh gitlab-ce-10.8.6-ce.0.el7.x86_64.rpm</span><br></pre></td></tr></table></figure>
+<h2 id="重新配置"><a href="#重新配置" class="headerlink" title="重新配置"></a>重新配置</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gitlab-ctl reconfigure</span><br></pre></td></tr></table></figure>
+<h2 id="重启"><a href="#重启" class="headerlink" title="重启"></a>重启</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gitlab-ctl restart</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/24/add-apt-repository设置代理/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1598,7 +1953,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">7</span>
+                    <span class="site-state-item-count">9</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1623,7 +1978,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">5</span>
+                      
+                    
+                    <span class="site-state-item-count">6</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -1654,7 +2011,13 @@
                     
                       
                     
-                    <span class="site-state-item-count">7</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">10</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
